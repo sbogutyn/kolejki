@@ -3,6 +3,7 @@
 #include <linux/msg.h>
 #include <linux/ipc.h>
 #include <string.h>
+#include <signal.h>
 #define wejscie 1862336293
 #define wyjscie 1694564035
 
@@ -29,15 +30,21 @@ char* znajdz(char* wyraz) {
 	return "nie znaleziono wyrazu";
 }
 
-int main() {
+int in, out;
+void przerwanie() {
+	msgctl(in,IPC_RMID,0);
+	msgctl(out,IPC_RMID,0);
+	exit(0);
+}
 
+int main() {
 	kom k;
-	int in, out;
 	int dlugosc;
 	char *wsk;
+	in = msgget(wejscie,0777|IPC_CREAT);
+	out = msgget(wyjscie,0777|IPC_CREAT);
+	signal(SIGINT, przerwanie);
 	while(1) {
-		in = msgget(wejscie,0777|IPC_CREAT);
-		out = msgget(wyjscie,0777|IPC_CREAT);
 		msgrcv(in,&k,sizeof(kom),0,0);
 		dlugosc = k.size;
 		wsk = (char*) k.dane;
@@ -45,9 +52,6 @@ int main() {
 		strcpy(k.dane, znajdz(wsk));
 		printf("serwer: odsylam %s do %5ld\n", k.dane, k.typ);
 		msgsnd(out,&k,sizeof(kom),0);
-		sleep(5);
-		msgctl(in,IPC_RMID,0);
-		msgctl(out,IPC_RMID,0);
 	}
 	return 0;
 }
