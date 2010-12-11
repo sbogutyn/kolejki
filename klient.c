@@ -13,7 +13,7 @@ typedef struct komunikat {
 } kom;
 
 int main() {
-	kom k;
+	kom k, l;
 	int in, out;
 	char *wsk;
 	long ident;  
@@ -31,7 +31,7 @@ int main() {
 	k.typ=ident;
 	msgsnd(in,&k,sizeof(kom),0);
 	printf("klient %5ld wyslalem %5d\n", ident, *wsk);
-	msgrcv(out,&k,sizeof(char),ident,0);
-	printf("klient %5ld otrzymalem %5d\n", ident, *wsk);
+	msgrcv(out,&l,sizeof(kom),ident,0);
+	printf("klient %5ld otrzymalem %s\n", ident, l.dane);
 	return 0;
 }
