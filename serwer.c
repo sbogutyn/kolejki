@@ -4,8 +4,11 @@
 #include <linux/ipc.h>
 #include <string.h>
 #include <signal.h>
+
 #define wejscie 1862336293
 #define wyjscie 1694564035
+#define PL 0
+#define ENG 1
 
 typedef struct komunikat {
 	long typ;
@@ -23,8 +26,8 @@ char* znajdz(char* wyraz) {
 	int i;
 	int wynik = 0;
 	for (i=0;i<4;i++) {
-		if (strcmp(wyraz, wyrazy[i][0]) == 0) {
-			return wyrazy[i][1];
+		if (strcmp(wyraz, wyrazy[i][PL]) == 0) {
+			return wyrazy[i][ENG];
 		}
 	}
 	return "nie znaleziono wyrazu";
