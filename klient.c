@@ -15,7 +15,6 @@ typedef struct komunikat {
 int main() {
 	kom k, l;
 	int in, out;
-	char *wsk;
 	long ident;  
 
 	in = msgget(wejscie,0777);
@@ -25,13 +24,14 @@ int main() {
 	printf("Podaj słowo polskie do przetłumaczenia na język angielski: ");
 	scanf("%s", k.dane);
 
-	/*printf("Dane to: %s\n", k.dane);*/
 	k.size = strlen(k.dane);
-	wsk = (char*) k.dane;
 	k.typ=ident;
+
 	msgsnd(in,&k,sizeof(kom),0);
 	printf("klient %5ld wyslalem: %s\n", ident, k.dane);
+
 	msgrcv(out,&l,sizeof(kom),ident,0);
 	printf("klient %5ld otrzymalem: %s\n", ident, l.dane);
+
 	return 0;
 }
